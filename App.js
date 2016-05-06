@@ -2,7 +2,7 @@ import React from 'react';
 
 
 let notepad = {
-    notes:[
+    notes: [
         {
             id: 1,
             content: "Hello, world!\nBoring.\nBoring.\nBoring."
@@ -23,37 +23,41 @@ let notepad = {
 }
 
 
-class App extends React.Component{
-    constructor(){
+class App extends React.Component {
+    constructor() {
         super();
-        this.state={notes: notepad.notes};
+        this.state = { notes: notepad.notes };
     }
-    
+
     deleteNote(id) {
-        console.log('remove'+id);
+        this.setState({
+                notes: this.state.notes.filter((note) => {
+                    return note.id != id;
+                })
+            })
     }
-    
-    render(){
+   
+    render() {
         return (
             <div className='note-list'>
-            {this.state.notes.map((note)=>{
-                const id = note.id;               
-                let title=note.content.substring(0,
-                note.content.indexOf('\n'));
-                title=title ||note.content;
-                return (        
-                    <div className='note-content' key={note.id}>
-                    ID: {id}&nbsp;&nbsp;&nbsp;&nbsp;
-                    Title: {title}
-                    <button className='btn-delete' onClick={() => this.deleteNote(id)}>Delete</button>
-                    </div>
-                )
-            })}
+                {this.state.notes.map((note) => {
+                    const id = note.id;
+                    let title = note.content.substring(0,
+                        note.content.indexOf('\n'));
+                    title = title || note.content;
+                    return (
+                        <div className='note-content' key={note.id}>
+                            ID: {id}&nbsp; &nbsp; &nbsp; &nbsp;
+                            Title: {title}
+                            <button className='btn-delete' onClick={() => this.deleteNote(id) }>Delete</button>
+                        </div>
+                    )
+                }) }
             </div>
-        ); 
+        );
     }
-    
-    
+
+
 }
 
 export default App;
