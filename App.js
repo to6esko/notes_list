@@ -36,7 +36,28 @@ class App extends React.Component {
                 })
             })
     }
-   
+    addNote() {
+        let newNotes = this.state.notes;
+        const maxNote = newNotes.reduce((prev, current) => (prev.id > current.id) ? prev : current);
+        const maxId = maxNote.id;
+        
+        // Takes the text from the input with ref content
+        const content = this.refs.content.value;
+        
+        // Clears the old text from the input 
+        this.refs.content.value = "";
+        
+        const newNote = {
+            id:maxId + 1, 
+            content:content
+        }; 
+        
+        newNotes.push(newNote);
+         
+        this.setState({
+            notes: newNotes
+        })
+    }
     render() {
         return (
             <div className='note-list'>
@@ -51,8 +72,12 @@ class App extends React.Component {
                             Title: {title}
                             <button className='btn-delete' onClick={() => this.deleteNote(id) }>Delete</button>
                         </div>
+                        
                     )
                 }) }
+                <input className='form-control' type='text' ref="content"></input>
+                <button className='btn-add' onClick={()=>this.addNote()}>Add Element</button>
+                <input className='btn-file' type='file'></input>
             </div>
         );
     }
