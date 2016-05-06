@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-bootstrap';
 
 
 let notepad = {
@@ -26,7 +27,7 @@ let notepad = {
 class App extends React.Component {
     constructor() {
         super();
-        this.state = { notes: notepad.notes };
+        this.state = { notes: notepad.notes, resultMessage: "" };
     }
 
     deleteNote(id) {
@@ -37,12 +38,28 @@ class App extends React.Component {
             })
     }
     addNote() {
+        // Clears any previous error messages
+        this.setResultMessage("");
+        
         let newNotes = this.state.notes;
-        const maxNote = newNotes.reduce((prev, current) => (prev.id > current.id) ? prev : current);
+        const maxNote = newNotes.length > 0  
+                ? newNotes.reduce((prev, current) => (prev.id > current.id) ? prev : current)
+                : {
+                    id: 0,
+                    content: ""
+                };
         const maxId = maxNote.id;
         
         // Takes the text from the input with ref content
         const content = this.refs.content.value;
+        
+        if (!content) {
+            const errorMessage = "The text cannot be empty";
+            
+            this.setResultMessage(errorMessage);
+            
+            return;
+        }
         
         // Clears the old text from the input 
         this.refs.content.value = "";
@@ -52,12 +69,24 @@ class App extends React.Component {
             content:content
         }; 
         
+        
+        const resultMessage = "Success!";
+        
         newNotes.push(newNote);
          
         this.setState({
-            notes: newNotes
+            notes: newNotes,
+            resultMessage
         })
     }
+    
+    setResultMessage(resultMessage) {
+        this.setState({
+            notes: this.state.notes,
+            resultMessage: resultMessage
+        })
+    }
+    
     render() {
         return (
             <div className='note-list'>
@@ -78,11 +107,12 @@ class App extends React.Component {
                 <input className='form-control' type='text' ref="content"></input>
                 <button className='btn-add' onClick={()=>this.addNote()}>Add Element</button>
                 <input className='btn-file' type='file'></input>
+                <span class="alert alert-danger" role="alert">
+                {this.state.resultMessage}
+                </span>
             </div>
         );
     }
-
-
 }
 
 export default App;
